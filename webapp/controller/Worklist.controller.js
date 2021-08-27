@@ -113,6 +113,7 @@ sap.ui.define([
 
             if(name){
                 aTableSearchState.push(new Filter("Name", FilterOperator.Contains, name));
+                debugger;
             }  
             
             this._applySearch(aTableSearchState);
