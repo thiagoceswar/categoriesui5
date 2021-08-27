@@ -44,7 +44,7 @@
                                 </suggestionItems>
                                 </Input>
 
-                                <Label text="Nome" />
+                                <Label text="Nome 111" />
                                 <Input id="inNome" value="" showValueHelp="true"
 			                        valueHelpRequest="onValueHelpRequest"/>
 
