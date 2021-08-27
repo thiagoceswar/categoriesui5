@@ -8,6 +8,6 @@
 		cancel=".onValueHelpClose">
 		<StandardListItem
 			title="{ID}"
-			description="{Name}" />
+			description="{Name}"/>
 	</SelectDialog>
 </core:FragmentDefinition>
