@@ -115,7 +115,7 @@ sap.ui.define([
 			var oView = this.getView(),
 				oViewModel = this.getModel("objectView"),
 				oElementBinding = oView.getElementBinding();
-
+            debugger;
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {
 				this.getRouter().getTargets().display("objectNotFound");
