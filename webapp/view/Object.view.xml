@@ -9,24 +9,35 @@
 		headerPinnable="false"
 		toggleHeaderOnTitleClick="false"
 		busy="{objectView>/busy}"
-		busyIndicatorDelay="{objectView>/delay}">
+		busyIndicatorDelay="{objectView>/delay}"
+        showFooter="true">
 
-		<semantic:titleHeading>
-			<Title
-				text="{ID}"
-				level="H2"/>
-		</semantic:titleHeading>
+        <semantic:titleHeading>
+            <Title
+                text="Details" level="H2"/>
+        </semantic:titleHeading>
+
 
 		<semantic:headerContent>
-			<ObjectNumber
-				number="{
-					path: 'ID',
-					formatter: '.formatter.numberUnit'
-				}"
-				unit="{Name}"
-			/>
-		</semantic:headerContent>
 
+		</semantic:headerContent>
+        <semantic:content>
+            <Panel>
+                <VBox>
+                    <Label text="{i18n>labelCategoryId}" required="true"/>
+                    <Input width="200px" value="{ID}" id="inId" />
+                    <Label text="{i18n>labelCategoryName}" required="true"/>
+                    <Input width="200px" value="{Name}" id="inName" />
+                </VBox>
+            </Panel>
+        </semantic:content>
+        <!-- Custom Footer Content-->
+        <semantic:footerCustomActions>
+                        <Button text="{i18n>btnCriar}" press="onPressCriar" id="btnCriar"/>
+                        <Button text="{i18n>btnEditar}" press="onPressEditar" id="btnEditar"/>
+                        <Button text="{i18n>btnExcluir}" press="onPressExcluir" id="btnExcluir"/>
+                        <Button text="{i18n>btnSalvar}" press="onPressSalvar" id="btnSalvar"/>
+        </semantic:footerCustomActions>
 		<semantic:sendEmailAction>
 			<semantic:SendEmailAction id="shareEmail" press=".onShareEmailPress"/>
 		</semantic:sendEmailAction>

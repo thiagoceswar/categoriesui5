@@ -137,7 +137,7 @@ sap.ui.define([
 			if (!this._pValueHelpDialog) {
 				this._pValueHelpDialog = Fragment.load({
 					id: oView.getId(),
-					name: "sap.treinamento.prj.projectcategories.view.ValueHelpName",
+					name: "sap.treinamento.prjcat.projectcategories.view.ValueHelpName",
 					controller: this
 				}).then(function (oDialog) {
 					oView.addDependent(oDialog);
