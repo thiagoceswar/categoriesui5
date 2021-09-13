@@ -1,9 +1,10 @@
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/routing/History",
+    "sap/ui/core/routing/History",
+    "sap/m/MessageBox",
 	"../model/formatter"
-], function (BaseController, JSONModel, History, formatter) {
+], function (BaseController, JSONModel, History,MessageBox, formatter) {
 	"use strict";
 
 	return BaseController.extend("sap.treinamento.prjcat.projectcategories.controller.Object", {
@@ -59,7 +60,99 @@ sap.ui.define([
 			} else {
 				this.getRouter().navTo("worklist", {}, true);
 			}
-		},
+        },
+        
+        onPressEditar: function(){
+                this.getView().byId("btnEditar").setVisible(false);
+                this.getView().byId("btnExcluir").setVisible(true);
+                this.getView().byId("btnSalvar").setVisible(true);
+                this.getView().byId("inName").setEditable(true); 
+        }, 
+
+        onPressCriar: function () {
+            //pegar os valores que o usuário digitou
+            debugger;
+            var oCreate = {};
+            oCreate.ID = parseInt(this.getView().byId("inId").getValue());
+            oCreate.Name = this.getView().byId("inName").getValue();
+           var oI18n = this.getView().getModel("i18n").getResourceBundle();
+           var sMsgSucesso = oI18n.getText("msgSucesso");
+            var sMsgErro = oI18n.getText("msgErro");
+            var sMsgCamposObrigatorios = oI18n.getText("msgCamposObrigatorios");
+           if ( (!oCreate.ID && oCreate.ID !== 0) || !oCreate.Name ){
+                //mandar a mensagem
+                MessageBox.error(sMsgCamposObrigatorios);
+                return;
+            }
+            //fazer uma requisição de criação
+            this.getModel().create("/Categories", oCreate, {
+                success: function () {
+                    //mandar uma mensagem de sucesso
+                    MessageBox.success(sMsgSucesso, {
+                        onClose: function (){
+                            //quando o usuário apertar OK, navega para a worklist
+                            window.history.go(-1);
+                        }
+                    });
+                }, error: function () {
+                    //manda mensagem de erro
+                    MessageBox.error(sMsgErro);
+                }
+            });
+           
+        },
+
+
+        onPressSalvar: function () {
+            //pegar os valores que o usuário digitou
+            debugger;
+            var oUpdate = {};
+            oUpdate.ID = parseInt(this.getView().byId("inId").getValue());
+            oUpdate.Name = this.getView().byId("inName").getValue();
+            var oI18n = this.getView().getModel("i18n").getResourceBundle();
+            var sMsgSucesso = oI18n.getText("msgSucesso");
+            var sMsgErro = oI18n.getText("msgErro");
+           var sPath = this.getModel().createKey("Categories", {
+                ID : oUpdate.ID
+            });            
+            debugger;
+            this.getModel().update("/" + sPath, oUpdate, {
+                success: function () {
+                    //mandar uma mensagem de sucesso
+                    MessageBox.success(sMsgSucesso, {
+                        onClose: function (){
+                            //quando o usuário apertar OK, navega para a worklist
+                            window.history.go(-1);
+                        }
+                    });
+                }, error: function () {
+                    //manda mensagem de erro
+                    MessageBox.error(sMsgErro);
+                }
+            });
+        }, 
+
+        onPressExcluir: function () {
+            debugger;
+            var sId = parseInt(this.getView().byId("inId").getValue());
+            var oI18n = this.getView().getModel("i18n").getResourceBundle();
+            var sMsgSucesso = oI18n.getText("msgSucesso");
+            var sMsgErro = oI18n.getText("msgErro");
+            var sPath = this.getModel().createKey("Categories", {
+                ID : sId
+            });
+            this.getModel().remove("/" + sPath, {
+                success: function (){
+                    MessageBox.success(sMsgSucesso, {
+                        onClose: function (){
+                            window.history.go(-1);
+                        }
+                    });
+                }, error: function () {
+                    MessageBox.error(sMsgErro);
+                }
+            });
+        },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -71,15 +164,35 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onObjectMatched : function (oEvent) {
-			var sObjectId =  oEvent.getParameter("arguments").objectId;
-			this.getModel().metadataLoaded().then( function() {
-				var sObjectPath = this.getModel().createKey("Categories", {
-					ID :  sObjectId
-				});
-				this._bindView("/" + sObjectPath);
-			}.bind(this));
-		},
+       _onObjectMatched : function (oEvent) {
+            var sObjectId =  oEvent.getParameter("arguments").objectId;
+            var oViewModel = this.getModel("objectView");
+            this.getModel().setUseBatch(false);
+            if (sObjectId === "new"){
+                this.getView().byId("btnCriar").setVisible(true);
+                this.getView().byId("btnEditar").setVisible(false);
+                this.getView().byId("btnExcluir").setVisible(false);
+                this.getView().byId("btnSalvar").setVisible(false); 
+                this.getView().byId("inId").setEditable(true);
+                this.getView().byId("inName").setEditable(true);                
+                this.getView().byId("inId").setValue("");
+                this.getView().byId("inName").setValue("");
+                oViewModel.setProperty("/busy", false);               
+            }else{
+                this.getView().byId("btnEditar").setVisible(true); 
+                this.getView().byId("btnCriar").setVisible(false);
+                this.getView().byId("btnExcluir").setVisible(false);
+                this.getView().byId("btnSalvar").setVisible(false);
+                this.getView().byId("inId").setEditable(false);
+                this.getView().byId("inName").setEditable(false); 
+                this.getModel().metadataLoaded().then( function() {
+                    var sObjectPath = this.getModel().createKey("Categories", {
+                        ID :  sObjectId
+                    });
+                    this._bindView("/" + sObjectPath);
+                }.bind(this));
+            }
+        },
 
 		/**
 		 * Binds the view to the object path.

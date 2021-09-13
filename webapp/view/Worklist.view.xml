@@ -75,6 +75,8 @@
 							text="{worklistView>/worklistTableTitle}"
 							level="H3"/>
 						<ToolbarSpacer />
+                        <Button text="{i18n>btnAdicionar}" press="onPressAdicionar" />
+
 						<!-- <SearchField
 							id="searchField"
 							tooltip="{i18n>worklistSearchTooltip}"

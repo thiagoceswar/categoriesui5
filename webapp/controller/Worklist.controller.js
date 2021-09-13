@@ -151,7 +151,11 @@ sap.ui.define([
 				oDialog.open(sInputValue);
 			});
 		},
-
+        onPressAdicionar: function () {
+            this.getRouter().navTo("object", {
+                objectId: "new"
+            });
+        }, 
 		onValueHelpSearch: function (oEvent) {
 			var sValue = oEvent.getParameter("value");
 			var oFilter = new Filter("Name", FilterOperator.Contains, sValue);
